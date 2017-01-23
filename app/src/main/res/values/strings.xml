@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">User Regisgtration PDF</string>
+    <string-array name="city">
+        <item>Hyderabad</item>
+        <item>Banglore</item>
+        <item>Chennai</item>
+        <item>Delhi</item>
+    </string-array>
+    <string name="title_activity_list">ListActivity</string>
+</resources>
