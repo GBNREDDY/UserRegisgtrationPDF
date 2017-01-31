@@ -16,23 +16,12 @@ public class MyDatabase extends SQLiteOpenHelper{
     private static final int version=1;
     private SQLiteDatabase sqLiteDatabase=null;
 
-    private String name,user,address,gender,mobile,dob,city,email;
     private Context context;
     private byte[] img;
 
-    public MyDatabase(Context context, String name, String user, String address, String gender, String mobile, String dob, String city, String email, byte[] img) {
+    public MyDatabase(Context context) {
         super(context, DBName, null, version);
         sqLiteDatabase =this.getWritableDatabase();
-        this.name=name;
-        this.user=user;
-        this.address=address;
-        this.gender=gender;
-        this.mobile=mobile;
-        this.dob=dob;
-        this.city=city;
-        this.email=email;
-        this.context=context;
-        this.img=img;
     }
 
     @Override
@@ -45,7 +34,7 @@ public class MyDatabase extends SQLiteOpenHelper{
 
     }
 
-    public Long insertData(SQLiteDatabase sqLiteDatabase){
+    public Long insertData(SQLiteDatabase sqLiteDatabase, String name, String user, String address, String gender, String mobile, String dob, String city, String email, byte[] img){
         ContentValues contentValues=new ContentValues();
         contentValues.put("name",name);
         contentValues.put("username",user);

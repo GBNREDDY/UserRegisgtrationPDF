@@ -135,10 +135,10 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                     }
                 } else {
 
-                    mdb = new MyDatabase(this, name.getText().toString(), user.getText().toString(), address.getText().toString(), mgender, mobile.getText().toString(), mdate, mcity, email.getText().toString(), bitmapdata);
+                    mdb = new MyDatabase(this);
                     sqLiteDatabase = mdb.getWritableDatabase();
                     try {
-                        Long l = mdb.insertData(sqLiteDatabase);
+                        Long l = mdb.insertData(sqLiteDatabase, name.getText().toString(), user.getText().toString(), address.getText().toString(), mgender, mobile.getText().toString(), mdate, mcity, email.getText().toString(), bitmapdata);
                         Log.d("code", l.toString());
                         if (l == -1) {
                             Toast.makeText(this, "Data not Inserted", Toast.LENGTH_SHORT).show();
@@ -149,24 +149,12 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                     } catch (SecurityException e) {
                         e.getMessage();
                     } finally {
-                        //mdb.close();
+                        mdb.close();
                     }
-                    // sqLiteDatabase = mdb.getWritableDatabase();
-                    Cursor c = mdb.getData();
-                    c.moveToFirst();
-                    do {
-                        Log.d("code", c.getString(5) + " ------ " + c.getBlob(8));
-                        byte[] bytarray = c.getBlob(8);
-                        Bitmap bmimage = getImage(bytarray);
-                        capturedimg.setImageBitmap(bmimage);
-                        dbcapturedimg.setImageBitmap(bmimage);
-                    } while (c.moveToNext());
-                   /* ArrayList<Data> arraylist=getData(c);
-                    ListActivity list=new ListActivity(arraylist);
                     Intent listActivity=new Intent(this,ListActivity.class);
-                    startActivity(listActivity);*/
+                    startActivity(listActivity);
 
-                    mdb.close();
+
                 }
                 break;
         }
@@ -221,19 +209,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     }
 
 
-    public ArrayList<Data> getData(Cursor c) {
-        ArrayList<Data> al = new ArrayList<>();
-        Data data = new Data();
-        c.moveToFirst();
-        do {
-            Data.name = c.getString(0);
-            Data.mobile = c.getString(4);
-            Data.email = c.getString(7);
-            al.add(data);
-        } while (c.moveToNext());
 
-        return al;
-    }
     public static byte[] getBytes(Bitmap bitmap) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
