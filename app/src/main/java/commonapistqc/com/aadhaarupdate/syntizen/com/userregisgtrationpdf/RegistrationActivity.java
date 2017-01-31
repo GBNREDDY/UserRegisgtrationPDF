@@ -152,6 +152,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                         mdb.close();
                     }
                     Intent listActivity=new Intent(this,ListActivity.class);
+                    listActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(listActivity);
 
 
