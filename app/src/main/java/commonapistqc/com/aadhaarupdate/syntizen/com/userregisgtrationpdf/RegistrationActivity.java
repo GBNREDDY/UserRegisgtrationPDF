@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -39,9 +40,9 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     private RadioGroup gender;
     private TextView datetxt;
     private Button datepick, capture, submit;
-    private ImageView capturedimg;
+    private ImageView capturedimg, dbcapturedimg;
     private DatePickerDialog datePickerDialog;
-    private String mdate = "", mgender = "", mcity = "";
+    private String mdate = "", mgender = "", mcity = "", encodedImageString = "";
     private byte[] bitmapdata = null;
     private SQLiteDatabase sqLiteDatabase;
     private MyDatabase mdb;
@@ -78,6 +79,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         submit.setOnClickListener(this);
 
         capturedimg = (ImageView) findViewById(R.id.captureimg);
+        dbcapturedimg = (ImageView) findViewById(R.id.dbcaptureimg);
 
         Calendar calendar = Calendar.getInstance();
         datePickerDialog = new DatePickerDialog(this, this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
@@ -146,22 +148,23 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
 
                     } catch (SecurityException e) {
                         e.getMessage();
-                    }finally {
+                    } finally {
                         //mdb.close();
                     }
-                   // sqLiteDatabase = mdb.getWritableDatabase();
+                    // sqLiteDatabase = mdb.getWritableDatabase();
                     Cursor c = mdb.getData();
-                   /* c.moveToFirst();
-                    do{
-                      Log.d("code",c.getString(5)+" ------ "+c.getBlob(8));
-                        byte[] byteArray=c.getBlob(8);
-                        Bitmap bm = BitmapFactory.decodeByteArray(byteArray, 0 ,byteArray.length);
-                        capturedimg.setImageBitmap(bm);
-                    }while (c.moveToNext());*/
-                    ArrayList<Data> arraylist=getData(c);
+                    c.moveToFirst();
+                    do {
+                        Log.d("code", c.getString(5) + " ------ " + c.getBlob(8));
+                        byte[] bytarray = c.getBlob(8);
+                        Bitmap bmimage = getImage(bytarray);
+                        capturedimg.setImageBitmap(bmimage);
+                        dbcapturedimg.setImageBitmap(bmimage);
+                    } while (c.moveToNext());
+                   /* ArrayList<Data> arraylist=getData(c);
                     ListActivity list=new ListActivity(arraylist);
                     Intent listActivity=new Intent(this,ListActivity.class);
-                    startActivity(listActivity);
+                    startActivity(listActivity);*/
 
                     mdb.close();
                 }
@@ -206,9 +209,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
             try {
                 //Getting the Bitmap from Gallery
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                bitmapdata = bos.toByteArray();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
+                bitmapdata=getBytes(bitmap);
                 capturedimg.setImageBitmap(bitmap);
 
             } catch (FileNotFoundException e) {
@@ -227,10 +228,20 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         do {
             Data.name = c.getString(0);
             Data.mobile = c.getString(4);
-            Data.email=c.getString(7);
+            Data.email = c.getString(7);
             al.add(data);
         } while (c.moveToNext());
 
         return al;
+    }
+    public static byte[] getBytes(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
+        return stream.toByteArray();
+    }
+
+    // convert from byte array to bitmap
+    public static Bitmap getImage(byte[] image) {
+        return BitmapFactory.decodeByteArray(image, 0, image.length);
     }
 }

@@ -37,7 +37,7 @@ public class MyDatabase extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("create table registration (name varchar(50),username varchar2(20),address varchar2(100),gender varchar2(10),mobile varchar(20),dob varcahr2(15),city varcahr2(20),email varchar2(100),image BLOB) ");
+        sqLiteDatabase.execSQL("create table registration (name TEXT,username TEXT,address TEXT,gender TEXT,mobile TEXT,dob TEXT,city TEXT,email TEXT,image BLOB); ");
     }
 
     @Override

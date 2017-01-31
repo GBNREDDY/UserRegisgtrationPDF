@@ -161,6 +161,10 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/captureimg"/>
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/dbcaptureimg"/>
     </LinearLayout>
     <Button
         android:layout_width="wrap_content"
